@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+* {
+    font-family: 'Outfit';
+}
+
+.shortcut-icon {
+    font-size: 3rem;
+}
+@media (min-width: 768px) {
+    .shortcut-icon {
+        font-size: 5rem;
+    }
+}
