@@ -31,7 +31,9 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍩</text></svg>"/>
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}">
+        <link rel="stylesheet" href="{% static 'dist/css/views/custom.css' %}">
+        <link rel="stylesheet" href="{% static 'dist/css/views/output.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'dist/css/core.css' %}">
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
@@ -52,10 +54,9 @@
 
         {# Global javascript #}
 
-        <script type="text/javascript" src="{% static 'js/core.js' %}"></script>
+        <script type="text/javascript" src="{% static 'dist/js/core.js' %}"></script>
 
         {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
         {% endblock %}
     </body>
 </html>
