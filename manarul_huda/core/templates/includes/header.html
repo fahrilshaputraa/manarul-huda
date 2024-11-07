@@ -1,6 +1,5 @@
 {% load wagtailcore_tags navigation_tags static i18n %}
 <header>
-  {% get_site_root as site_root %}
     <nav class="bg-primary-300 border-gray-200">
       <div class="flex flex-wrap gap-3 md:gap-5 items-start p-2 md:p-3 max-w-screen-2xl mx-auto text-xs md:text-sm text-primary-950">
         <address class="flex gap-2 md:gap-2.5 items-center self-stretch not-italic">
@@ -25,7 +24,7 @@
     </nav>
       <nav class="bg-primary-50 border-gray-200 px-4 lg:px-6 py-2.5 lg:h-32 sticky top-0 z-50">
           <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-2xl h-full">
-              <a href="{% pageurl site_root %}" class="flex items-center">
+              <a href="/" class="flex items-center">
                   <img src="{% static 'dist/img/logo.png' %}" class="mr-3 h-14 sm:h-16 md:h-20 lg:h-24" alt="Manarul Huda Buniseuri Logo" />
                   <div class="agency-logo max-sm:hidden">
                       <h3 class="self-center text-sm md:text-2xl lg:text-2xl xl:text-3xl text-primary-950 font-semibold whitespace-nowrap uppercase">Yayasan Manarul Huda</h3>
@@ -39,56 +38,8 @@
                   </svg>
               </button>
               <div class="hidden w-full lg:block md:w-auto" id="navbar-multi-level">
-                <ul class="flex flex-col text-xs md:text-base font-medium uppercase p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                  <li>
-                    <a href="{% pageurl site_root %}" class="block py-2 px-3 rounded md:bg-transparent md:text-primary-600 md:p-0" aria-current="page">{% translate "Home" %}</a>
-                  </li>
-                  <li>
-                      <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full py-2 px-3 text-primary-950 md:hover:bg-transparent md:border-0 md:hover:text-primary-600 md:p-0 md:w-auto uppercase">Dropdown <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                      </svg></button>
-                      <!-- Dropdown menu -->
-                      <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                          <ul class="py-2 uppercase text-primary-950" aria-labelledby="dropdownLargeButton">
-                            <li>
-                              <a href="#" class="block px-4 py-2">Dashboard</a>
-                            </li>
-                            <li aria-labelledby="dropdownNavbarLink">
-                              <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" type="button" class="flex items-center justify-between w-full px-4 py-2">Dropdown<svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                  </svg>
-                              </button>
-                              <div id="doubleDropdown" class="z-10 hidden divide-y bg-white divide-gray-100 rounded-lg shadow w-44">
-                                  <ul class="py-2 text-sm text-primary-950" aria-labelledby="doubleDropdownButton">
-                                    <li>
-                                      <a href="#" class="block px-4 py-2">Overview</a>
-                                    </li>
-                                    <li>
-                                      <a href="#" class="block px-4 py-2">My downloads</a>
-                                    </li>
-                                    <li>
-                                      <a href="#" class="block px-4 py-2">Billing</a>
-                                    </li>
-                                    <li>
-                                      <a href="#" class="block px-4 py-2">Rewards</a>
-                                    </li>
-                                  </ul>
-                              </div>
-                            </li>
-                            <li>
-                              <a href="#" class="block px-4 py-2">Earnings</a>
-                            </li>
-                          </ul>
-                          <div class="py-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700">Sign out</a>
-                          </div>
-                      </div>
-                  </li>
-                  {% for menuitem in site_root.get_children.live.in_menu %}
-                  <li>
-                    <a href="{% pageurl menuitem %}" class="block py-2 px-3 text-gray-900 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary-600 md:p-0">{{ menuitem.title }}</a>
-                  </li>
-                  {% endfor %}
+                <ul class="flex flex-col text-xs md:text-base font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                    {% get_menu_items %}
                 </ul>
               </div>
           </div>

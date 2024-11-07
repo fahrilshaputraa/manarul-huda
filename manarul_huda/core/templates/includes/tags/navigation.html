@@ -1,0 +1,65 @@
+{% load wagtailimages_tags %}
+{% for item in menu_items %}
+    <li>
+        {% if item.is_parent %}
+            <button id="dropdownNavbarLink-{{ item.id }}" data-dropdown-toggle="dropdownNavbar-{{ item.id }}" class="flex items-center justify-between w-full py-2 px-3 text-primary-950 md:hover:bg-transparent md:border-0 {% if item.page.url == request.path %}text-primary-600{% else %}hover:text-primary-600{% endif %} md:p-0 md:w-auto uppercase">
+                {% if item.icon %}
+                    {% image item.icon fill-20x20  class="me-2 filter grayscale"%}
+                {% endif %}
+                {{ item.name_item }}
+                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdownNavbar-{{ item.id }}" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                <ul class="py-2 text-primary-950" aria-labelledby="dropdownNavbarLink-{{ item.id }}">
+                    {% for child in item.get_children %}
+                        {% if child.is_parent and child.get_children.exists %}
+                            <li aria-labelledby="dropdownNavbarLink-{{ item.id }}">
+                                <button id="doubleDropdownButton-{{ child.id }}" data-dropdown-toggle="doubleDropdown-{{ child.id }}" data-dropdown-placement="right-start" type="button" class="flex items-center justify-between w-full px-4 py-2 {% if child.page.url == request.path %}text-primary-600{% else %}text-primary-950 hover:text-primary-600{% endif %}">
+                                    {% if child.icon %}
+                                        {% image child.icon fill-20x20  class="me-2 filter grayscale"%}
+                                    {% endif %}
+                                    {{ child.name_item }}
+                                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                                <div id="doubleDropdown-{{ child.id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                    <ul class="py-2 text-sm text-primary-950" aria-labelledby="doubleDropdownButton-{{ child.id }}">
+                                        {% for grandchild in child.get_children %}
+                                            <li>
+                                                <a href="{{ grandchild.get_url }}" class="flex items-center px-4 py-2 {% if grandchild.page.url == request.path %}text-primary-600{% else %}text-primary-950 hover:text-primary-600{% endif %}">
+                                                    {% if grandchild.icon %}
+                                                        {% image grandchild.icon fill-20x20  class="me-2 filter grayscale"%}
+                                                    {% endif %}
+                                                    {{ grandchild.name_item }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ child.get_url }}" class="flex items-center px-4 py-2 {% if child.page.url == request.path %}text-primary-600{% else %}text-primary-950 hover:text-primary-600{% endif %}">
+                                    {% if child.icon %}
+                                        {% image child.icon fill-20x20  class="me-2 filter grayscale"%}
+                                    {% endif %}
+                                    {{ child.name_item }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <a href="{{ item.get_url }}" class="flex items-center py-2 px-3 rounded md:hover:bg-transparent md:border-0 uppercase {% if item.page.url == request.path %}text-primary-600{% else %}text-primary-950 hover:text-primary-600{% endif %} md:p-0">
+                {% if item.icon %}
+                    {% image item.icon fill-20x20  class="me-2 filter grayscale"%}
+                {% endif %}
+                {{ item.name_item }}
+            </a>
+        {% endif %}
+    </li>
+{% endfor %} 

@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="max-w-screen-xl mx-auto my-20 px-8 grid grid-cols-1 {% if page.about_us_card %}lg:grid-cols-2{% else %}md:grid-cols-1 text-center{% endif %} gap-10">
+    <!-- Kiri (Card Grid) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 h-full order-2 lg:order-1">
+        {% for block in page.about_us_card %}
+            <div class="bg-primary-300 p-5 rounded-lg text-center flex flex-col justify-center items-center">
+                <h3 class="font-bold text-lg md:text-2xl mb-2">{{ block.value.title }}</h3>
+                <p class="text-gray-700 text-sm md:text-base">{{ block.value.text }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Kanan (Konten Teks) -->
+    <div class="space-y-5 order-1 lg:order-2">
+        <h2 class="text-3xl md:text-4xl font-bold">{{ page.about_us_title }}</h2>
+        <div class="text-gray-700 text-base md:text-lg prose prose-lg max-w-none prose-headings:text-primary-950 prose-p:text-gray-600 prose-a:text-primary-500 hover:prose-a:text-primary-600 prose-strong:text-primary-950 prose-ul:text-primary-950 prose-ol:text-primary-950">
+            {{ page.about_us_text|richtext }}
+        </div>
+    </div>
+</section>

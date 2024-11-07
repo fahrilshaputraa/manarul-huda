@@ -1,7 +1,8 @@
 from django import template
 
-from base.models import FooterText
-from wagtail.models import Site
+from base.models import FooterText, MenuItem
+from wagtail.models import Site, Page
+
 register = template.Library()
 
 # get the footer text
@@ -17,7 +18,24 @@ def get_footer_text(context):
         "footer_text": footer_text,
     }
 
-# get the navigation settings
-@register.simple_tag(takes_context=True)
-def get_site_root(context):
-    return Site.find_for_request(context["request"]).root_page
+# breadcrumb
+@register.inclusion_tag("includes/tags/breadcrumbs.html", takes_context=True)
+def breadcrumbs(context):
+    self = context.get("self")
+    if self is None or self.depth <= 2:
+        # When on the home page, displaying breadcrumbs is irrelevant.
+        ancestors = ()
+    else:
+        ancestors = Page.objects.ancestor_of(self, inclusive=True).filter(depth__gt=1)
+    return {
+        "ancestors": ancestors,
+        "request": context["request"],
+    }
+
+@register.inclusion_tag('includes/tags/navigation.html', takes_context=True)
+def get_menu_items(context):
+    menu_items = MenuItem.objects.filter(parent=None)
+    return {
+        'menu_items': menu_items,
+        'request': context['request'],
+    }

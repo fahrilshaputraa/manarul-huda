@@ -1,5 +1,5 @@
 {# Remove wagtailuserbar: #}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags navigation_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,16 +25,17 @@
         {% endif %}
 
         {# Add supported color schemes: #}
-        <meta name="color-scheme" content="light dark">
+        <meta name="color-scheme" content="light">
 
         {# Add a favicon with inline SVG: #}
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍩</text></svg>"/>
-
-        {# Global stylesheets #}
         <link rel="stylesheet" href="{% static 'dist/css/views/custom.css' %}">
         <link rel="stylesheet" href="{% static 'dist/css/views/output.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'dist/css/core.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+        {# Global stylesheets #}
+        
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
         {% endblock %}
@@ -44,7 +45,9 @@
         {# Remove  wagtailuserbar: #}
 
         {% include "includes/header.html" %}
-
+        {% block breadcrumbs %}
+          {% breadcrumbs %}
+        {% endblock breadcrumbs %}
         {# Wrap your block content  within a <main> HTML5 tag: #}
         <main>
             {% block content %}{% endblock %}

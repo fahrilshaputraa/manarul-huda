@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "flowbite": "^2.5.2"
   },
   "devDependencies": {
