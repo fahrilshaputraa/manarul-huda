@@ -7,17 +7,6 @@ from wagtail.admin.panels import (
     PublishingPanel,
 )
 
-# import RichTextField:
-from wagtail.fields import RichTextField
-
-# import DraftStateMixin, PreviewableMixin, RevisionMixin, TranslatableMixin:
-from wagtail.models import (
-    DraftStateMixin,
-    PreviewableMixin,
-    RevisionMixin,
-    TranslatableMixin,
-)
-
 from wagtail.contrib.settings.models import (
     BaseGenericSetting,
     register_setting,
@@ -28,51 +17,102 @@ from django.core.exceptions import ValidationError
 
 # import register_snippet:
 from wagtail.snippets.models import register_snippet
-@register_setting
-class NavigationSettings(BaseGenericSetting):
-    twitter_url = models.URLField(verbose_name="Twitter URL", blank=True)
-    github_url = models.URLField(verbose_name="GitHub URL", blank=True)
-    mastodon_url = models.URLField(verbose_name="Mastodon URL", blank=True)
+from wagtail.models import Collection
 
+from wagtailmetadata.models import MetadataPageMixin
+from wagtail.blocks import StructBlock, CharBlock, PageChooserBlock, URLBlock, StreamBlock, StructBlock
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.fields import StreamField
+    
+@register_setting(icon="site")
+class WebsiteSettings(BaseGenericSetting):
+    icon = "globe"
+    name = models.CharField(max_length=255, help_text="Name of the website")
+    sub_name = models.CharField(max_length=255, help_text="Sub Name of the website", null=True)
+    logo = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    location = models.CharField(max_length=255, help_text="Location of the website")
+    location_link = models.URLField(verbose_name="Location Url", null=True)
+    phone = models.CharField(max_length=255, help_text="Phone number of the website")
+    email = models.EmailField(help_text="Email of the website")
+    copyright = models.CharField(max_length=255, help_text="Copyright of the website")
+    
     panels = [
-        MultiFieldPanel(
+         MultiFieldPanel(
             [
-                FieldPanel("twitter_url"),
-                FieldPanel("github_url"),
-                FieldPanel("mastodon_url"),
+            FieldPanel("name"),
+            FieldPanel("sub_name"),
+            FieldPanel("logo"),
+            FieldPanel("location"),
+            FieldPanel("location_link"),
+            FieldPanel("phone"),
+            FieldPanel("email"),
+            FieldPanel("copyright"),
             ],
-            "Social settings",
-        )
+            "Website Settings"
+         )
     ]
 
 
-@register_snippet
-class FooterText(
-    DraftStateMixin,
-    RevisionMixin,
-    PreviewableMixin,
-    TranslatableMixin,
-    models.Model,
-):
+@register_setting(icon="site")
+class FooterText(BaseGenericSetting):
 
-    body = RichTextField()
+    menu_items = StreamField([
+        ("menu_item", StructBlock([
+            ("title", CharBlock(max_length=100)),
+            ("link", StreamBlock([
+                ("items", StructBlock([
+                    ("title", CharBlock(max_length=100)), 
+                    ("page", PageChooserBlock(required=False)),
+                    ("external_link", URLBlock(required=False)),
+                ])),
+            ],
+            max_num=5,
+            min_num=1,
+            )),
+        ])),
+    ],
+        use_json_field=True,
+        max_num=2,
+        min_num=2,
+        null=True,
+    )
+    social_media = StreamField([
+        ("social_media", StructBlock([
+            ("icon", ImageChooserBlock(required=False)),
+            ("link", URLBlock(required=False)),
+        ])),
+    ],
+        use_json_field=True,
+        max_num=5,
+        min_num=1,
+        null=True,
+    )
 
     panels = [
-        FieldPanel("body"),
+        FieldPanel("menu_items"), 
+        FieldPanel("social_media"),
         PublishingPanel(),
     ]
 
     def __str__(self):
         return "Footer text"
+    
+    def clean(self):
+        for block in self.menu_items:
+            for link in block.value['link']:
+                if not (bool(link.value['page']) ^ bool(link.value['external_link'])):
+                    raise ValidationError({'menu_items': "Please choose exactly one: page or external link"})
+                    
+        for block in self.social_media:
+            if not block.value['icon'].filename.lower().endswith('.svg'):
+                raise ValidationError({'social_media': "Icon must be an SVG file"})
 
-    def get_preview_template(self, request, mode_name):
-        return "base.html"
-
-    def get_preview_context(self, request, mode_name):
-        return {"footer_text": self.body}
-
-    class Meta(TranslatableMixin.Meta):
-        verbose_name_plural = "Footer Text"
         
 @register_snippet
 class MenuItem(models.Model):
@@ -125,3 +165,30 @@ class MenuItem(models.Model):
 
     class Meta:
         ordering = ['name_item']
+
+class Gallery(MetadataPageMixin, Page):
+    template = "base/gallery_page.html"
+    introduction = models.TextField(help_text="Text to describe the page", blank=True)
+    collection = models.ForeignKey(
+        Collection,
+        limit_choices_to=~models.Q(name__in=["Root"]),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text="Select the image collection for this gallery.",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("introduction"),
+        FieldPanel("collection"),
+    ]
+
+    subpage_types = []
+    
+    
+from django.utils.html import format_html
+from wagtail.admin.ui.components import Component
+
+class WelcomePanel(Component):
+    def render_html(self, parent_context):
+        return format_html("<h1>{}</h1>", "Welcome to my app!")

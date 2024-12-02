@@ -48,7 +48,14 @@ INSTALLED_APPS = [
     "base",
     "wagtail.contrib.settings",
     "blogpages",
+    "django.contrib.sitemaps",
+    "django.contrib.sites",
+    "django_comments",
+    "comments",
+    "crispy_forms",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -186,3 +193,10 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
 WAGTAILIMAGES_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']
+
+COMMENTS_APP = 'comments'
+WAGTAIL_SITE_NAME = "Manarul Huda Buniseuri"
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]

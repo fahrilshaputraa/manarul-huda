@@ -1,0 +1,8 @@
+{% extends "wagtailadmin/login.html" %}
+{% load static i18n wagtailadmin_tags %}
+
+{% block branding_logo %}{% endblock %}
+{% block branding_login %}
+    <img src="{% static 'dist/img/logo.png' %}" alt="Custom Project" width="100" /> <br>
+    {% trans "Sign in to Manarul Huda Buniseuri" %}
+{% endblock %}

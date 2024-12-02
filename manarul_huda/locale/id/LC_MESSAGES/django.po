@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-01 20:04+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: blogpages/models.py:17
+msgid "Subtitle of the blog page"
+msgstr "Subjudul halaman blog"
+
+#: blogpages/models.py:18 blogpages/models.py:51
+msgid "Subtitle"
+msgstr "Subjudul"
+
+#: blogpages/models.py:50
+msgid "Subtitle of the blog detail page"
+msgstr "Subjudul halaman detail blog"
+
+#: blogpages/models.py:58
+msgid "Blog image"
+msgstr "Gambar blog"
+
+#: blogpages/models.py:60
+msgid "Body"
+msgstr "Isi"
+
+#: blogpages/models.py:61
+msgid "Body of the blog detail page"
+msgstr "Isi halaman detail blog"
+
+#: blogpages/models.py:63
+msgid "Created at"
+msgstr "Dibuat pada"
+
+#: blogpages/models.py:65
+msgid "Updated at"
+msgstr "Diperbarui pada"
+
+#: core/templates/wagtailadmin/home.html:4
+msgid "Welcome to Manarul Huda Buniseuri"
+msgstr "Selamat datang di Manarul Huda Buniseuri"
+
+#: core/templates/wagtailadmin/login.html:49
+msgid "Remember me"
+msgstr "Ingat saya"
+
+#: core/templates/wagtailadmin/login.html:40
+msgid "Forgotten password?"
+msgstr "Lupa password?"
+
+#: core/templates/wagtailadmin/login.html:7
+msgid "Sign in to Manarul Huda Buniseuri"
+msgstr "Masuk ke Manarul Huda Buniseuri"
+
+#: home/models.py:124
+msgid "Link Page"
+msgstr "Halaman Tautan"

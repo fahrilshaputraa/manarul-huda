@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags comments %}
 
 {% block content %}
 <div class="p-6">
@@ -15,21 +15,29 @@
             <div class="description text-lg text-primary-950 prose prose-lg max-w-none prose-headings:text-primary-950 prose-p:text-primary-950 prose-a:text-primary-500 hover:prose-a:text-primary-600 prose-strong:text-primary-950 prose-ul:text-primary-950 prose-ol:text-primary-950">
               {{ page.body|richtext }}
             </div>
+             <section class="not-format" id="comment-section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg lg:text-2xl font-bold text-gray-900">Tinggalkan pesan ({{ comment_list.count }})</h2>
+                </div>
+                {% render_comment_form for page %}
+                {% render_comment_list for page %}
+            </section>
         </div>
 
         <div class="p-6 h-fit w-full mt-8" >
             <h2 class="text-primary-950 text-2xl font-semibold mb-4">Info Lainnya</h2>
             <div class="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card 1 -->
+                {% for blog in other_blogs|slice:":4" %}
                 <div class="bg-primary-50 shadow-sm rounded-lg overflow-hidden h-[300px] flex flex-col">
                     <div class="p-4 flex-1">
-                        <h3 class="text-primary-950 font-semibold text-xl line-clamp-2">Madrasah Diniyah Manarul Huda</h3>
-                        <p class="text-primary-500 text-sm mb-2">By Author • 11 October 2024</p>
+                        <h3 class="text-primary-950 font-semibold text-xl line-clamp-2">{{ blog.title }}</h3>
+                        <p class="text-primary-500 text-sm mb-2">{{ blog.owner }} • {{ blog.created_at|date:"d F Y" }}</p>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1729273789373-f17041e81224?q=80&w=1970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Madrasah Diniyah" class="w-full h-48 object-cover">
+                    {% image blog.blog_image fill-400x200 as blog_image %}
+                    <img src="{{ blog_image.url }}" alt="{{ blog_image.title }}" class="w-full h-48 object-cover">
                 </div>
+                {% endfor %}
             </div>
-          
         </div>
     </div>
 </div>

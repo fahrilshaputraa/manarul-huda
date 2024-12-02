@@ -1,5 +1,5 @@
 # Use an official Python runtime based on Debian 10 "buster" as a parent image.
-FROM python:3.8.1-slim-buster
+FROM python:3.8-slim
 
 # Add user that will be used in the container.
 RUN useradd wagtail
@@ -47,6 +47,7 @@ USER wagtail
 
 # Collect static files.
 RUN python manage.py collectstatic --noinput --clear
+RUN python manage.py compilemessages
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:

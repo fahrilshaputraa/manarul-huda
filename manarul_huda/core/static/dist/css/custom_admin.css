@@ -1,0 +1,14 @@
+:root {
+    --w-login-fullscreen-background: #1d1d1d;
+}
+.w-theme-light {
+    --w-color-surface-menus: #608B25;
+    --w-color-surface-menu-item-active: #4A6B20;
+    --w-color-text-link-default: #9BCA51;
+    --w-color-text-label: #1A280B;
+    --w-color-icon-primary: #1A280B;
+    --w-color-text-button-outline-default: #608B25;
+    --w-color-surface-button-default: #4A6B20;
+    --w-color-surface-button-hover: #3D551F;
+    --w-color-surface-page: #F6FAEB;
+}

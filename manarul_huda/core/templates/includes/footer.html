@@ -1,69 +1,83 @@
 {# Load navigation_tags at the top of the file: #}
-{% load navigation_tags static %}
-
-{% comment %} <footer>
-    <p>Built with Wagtail</p>
-
-    {% with twitter_url=settings.base.NavigationSettings.twitter_url github_url=settings.base.NavigationSettings.github_url mastodon_url=settings.base.NavigationSettings.mastodon_url %}
-        {% if twitter_url or github_url or mastodon_url %}
-            <p>
-                Follow me on:
-                {% if github_url %}
-                    <a href="{{ github_url }}">GitHub</a>
-                {% endif %}
-                {% if twitter_url %}
-                    <a href="{{ twitter_url }}">Twitter</a>
-                {% endif %}
-                {% if mastodon_url %}
-                    <a href="{{ mastodon_url }}">Mastodon</a>
-                {% endif %}
-            </p>
-        {% endif %}
-    {% endwith %}
-
-    {# Add footer_text: #}
-    {% get_footer_text %}
-</footer> {% endcomment %}
-
-<footer class="bg-primary-600 text-white mt-10">
-    <div class="max-w-screen-2xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 py-10">
-        <!-- Logo & Nama -->
-        <div class="lg:col-span-2 uppercase">
-            <div class="flex items-start lg:items-center flex-row md:flex-col lg:flex-row">
-              <img src="{% static 'dist/img/logo.png' %}" alt="Logo" class="w-32">
-              <div class="footer-title ml-4">
-              <h3 class="text-3xl md:text-2xl lg:text-3xl font-bold">Yayasan Manarul Huda</h3>
-                <p class="text-xl lg:text-2xl md:text-lg text-primary-950 font-semibold">BUNISEURI</p>
-              </div>
+{% load navigation_tags wagtailimages_tags static %}
+<footer class="p-4 bg-primary-600 sm:p-6">
+    <div class="mx-auto max-w-screen-xl">
+        <div class="md:flex md:justify-between">
+            <div class="mb-6 md:mb-0 w-full">
+                <a href="#" class="flex items-center md:block lg:flex">
+                    {% image settings.base.WebsiteSettings.logo original as logo %}
+                    <img src="{{ logo.url }}" class="mr-3 w-20 md:w-24 lg:w-32" alt="{{ logo.title }}" />
+                    <div class="footer-title ">
+                        <h3 class="self-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold whitespace-normal text-white uppercase">{{ settings.base.WebsiteSettings.name }}</h3>
+                        <span class="text-primary-950 font-semibold text-base sm:text-lg md:text-xl lg:text-2xl uppercase block">{{ settings.base.WebsiteSettings.sub_name }}</span>
+                    </div>
+                </a>
+            </div>
+            <div class="grid grid-cols-2 gap-8 sm:gap-6 xl:grid-cols-3">
+                {% for menu_item in settings.base.FooterText.menu_items %}
+                <div>
+                    <h2 class="mb-6 text-2x font-semibold text-white uppercase whitespace-nowrap">{{ menu_item.value.title }}</h2>
+                    <ul class="text-primary-200">
+                        {% for link in menu_item.value.link %}
+                        <li class="mb-4">
+                            {% if link.value.page %}
+                            <a href="{{ link.value.page.url }}" class="hover:underline break-words">{{ link.value.title }}</a>
+                            {% else %}
+                            <a href="{{ link.value.external_link }}" class="hover:underline break-words">{{ link.value.title }}</a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+                <div>
+                    <h2 class="mb-6 text-2x font-semibold text-white uppercase whitespace-nowrap">Informasi Lainnya</h2>
+                    <ul class="text-primary-200">
+                        <li class="mb-4">
+                            <a href="tel:{{ settings.base.WebsiteSettings.phone }}" class="hover:underline break-words">{{ settings.base.WebsiteSettings.phone }}</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="mailto:{{ settings.base.WebsiteSettings.email }}" class="hover:underline break-words">{{ settings.base.WebsiteSettings.email }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ settings.base.WebsiteSettings.location_link }}" class="hover:underline break-words">{{ settings.base.WebsiteSettings.location }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <!-- Program -->
-        <div>
-            <h4 class="text-2xl font-semibold mb-3 uppercase">PROGRAM</h4>
-            <ul class="text-lg space-y-2.5 text-primary-200">
-                <li><a href="#">Paud</a></li>
-                <li><a href="#">Madrasah Diniyah</a></li>
-                <li><a href="#">Majelis Taklim</a></li>
-                <li><a href="#">Rumah Baca</a></li>
-                <li><a href="#">Posyandu</a></li>
-                <li><a href="#">Santunan Anak Yatim</a></li>
-                <li><a href="#">Penyembelihan Hewan Kurban</a></li>
-            </ul>
+        <hr class="my-6 border-primary-300 sm:mx-auto lg:my-8" />
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <span class="text-sm text-primary-200 sm:text-center">© 2024 <a href="#" class="hover:underline">{{ settings.base.WebsiteSettings.copyright }}</a> - powered by <a href="mailto:fahrilshapura@gmail.com" class="hover:underline text-primary-50">Fahril Shapura</a>
+            </span>
+            <div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
+                {% for social in settings.base.FooterText.social_media %}
+                <a href="{{ social.value.link }}" target="_blank" class="text-primary-200 hover:text-white">
+                    {% image social.value.icon original as icon %}
+                    <div class="svg-icon-footer">
+                        <img src="{{ icon.url }}" class="hidden" alt="{{ icon.title }}">
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
         </div>
-
-        <!-- Info Lainnya -->
-        <div>
-            <h4 class="text-2xl font-semibold mb-3 uppercase">INFO LAINNYA</h4>
-            <ul class="text-lg space-y-2.5 text-primary-200">
-                <li><a href="#" class="flex gap-2 items-center"><i class="fa-solid fa-phone"></i> +4481357799016</a></li>
-                <li><a href="#" class="flex gap-2 items-center"><i class="fa-solid fa-envelope"></i> elizabeth_mejia@outlook.com</a></li>
-                <li><a href="#" class="flex gap-2 items-center"><i class="fa-solid fa-location-dot"></i> Jl.Muktisari, Kec. Cipaku, Kabupaten Ciamis, Jawa Barat</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="text-end mt-10 text-base font-medium bg-primary-300 py-5">
-      <div class="max-w-screen-2xl mx-auto text-primary-950">
-        © Yayasan Manarul Huda 2024
-      </div>
     </div>
 </footer>
+
+<script>
+document.querySelectorAll('.svg-icon-footer').forEach(container => {
+    const imgElement = container.querySelector('img');
+    if (imgElement) {
+        fetch(imgElement.src)
+            .then(response => response.text())
+            .then(svgContent => {
+                container.innerHTML = svgContent;
+                const svg = container.querySelector('svg');
+                if (svg) {
+                    svg.classList.add('w-5', 'h-5', 'fill-primary-200', 'hover:fill-primary-500', 'fill-current');
+                }
+            })
+            .catch(error => console.error('Error loading SVG:', error));
+    }
+});
+</script>

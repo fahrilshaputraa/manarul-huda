@@ -1,0 +1,15 @@
+{% load static %}
+{% for comment in comment_list %}
+<article class="p-6 text-base bg-white border-t border-gray-200">
+    <footer class="flex justify-between items-center mb-2">
+        <div class="flex items-center">
+            <p class="inline-flex items-center mr-3 font-semibold text-sm text-gray-900"><img
+                    class="mr-2 w-6 h-6 rounded-full"
+                    src="{% static 'dist/img/guest.svg' %}"
+                    alt="{{ comment.name }}">{{ comment.name }}</p>
+            <p class="text-sm text-gray-600"><time pubdate datetime="{{ comment.submit_date|date:"c" }}" title="{{ comment.submit_date|date:"DATE_FORMAT" }}">{{ comment.submit_date|date:"d M Y" }}</time></p>
+        </div>
+    </footer>
+    <p>{{ comment.comment }}</p>
+</article>
+{% endfor %}

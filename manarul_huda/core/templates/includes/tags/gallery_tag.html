@@ -1,0 +1,82 @@
+{% load wagtailimages_tags %}
+
+<div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4" id="gallery-container">
+    {% for image in images %}
+        {% image image original as img %}
+        <div class="overflow-hidden rounded-lg break-inside-avoid mb-4">
+            <a href="{{ img.url }}" data-lightbox="gallery" data-title="{{ image.title }}" target="_blank">
+                <img 
+                    src="{{ img.url }}" 
+                    alt="{{ image.title }}" 
+                    class="w-full h-auto object-cover hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                >
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Loading Indicator -->
+<div id="loading-indicator" class="hidden">
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-primary-600 border-t-transparent"></div>
+    </div>
+</div>
+
+{% if has_more %}
+<div class="flex justify-center mt-8">
+    <button 
+        id="load-more"
+        data-next-page="{{ next_page }}"
+        class="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+    >
+        Load More
+    </button>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('load-more')?.addEventListener('click', async function() {
+    const button = this;
+    const nextPage = button.dataset.nextPage;
+    const container = document.getElementById('gallery-container');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    
+    try {
+        button.style.display = 'none';
+        loadingIndicator.classList.remove('hidden');
+        
+        const response = await fetch(`?page=${nextPage}`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Get new images
+        const newContainer = doc.getElementById('gallery-container');
+        if (newContainer) {
+            // Append new images
+            const newImages = Array.from(newContainer.children);
+            newImages.forEach(item => {
+                container.appendChild(item.cloneNode(true));
+            });
+            
+            // Update load more button
+            const newButton = doc.getElementById('load-more');
+            if (newButton) {
+                button.dataset.nextPage = newButton.dataset.nextPage;
+                button.style.display = 'block';
+            } else {
+                button.remove();
+            }
+        }
+    } catch (error) {
+        console.error('Error loading more images:', error);
+        alert('Failed to load more images. Please try again.');
+        button.style.display = 'block';
+    } finally {
+        loadingIndicator.classList.add('hidden');
+    }
+});
+</script>

@@ -1,0 +1,87 @@
+{% load crispy_forms_tags comments %}
+<form action="{% comment_form_target %}" method="post" class="space-y-8 mb-6" id="comment-form">
+    <!-- Alert Container -->
+    <div id="success-alert" class="hidden mb-4 p-4 text-green-800 border border-green-300 rounded-lg bg-green-50">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+            </svg>
+            <div class="ms-2 text-sm font-medium">
+                Komentar berhasil dikirim!
+            </div>
+        </div>
+    </div>
+
+    <div id="error-alert" class="hidden mb-4 p-4 text-red-800 border border-red-300 rounded-lg bg-red-50">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+            </svg>
+            <div class="ms-2 text-sm font-medium">
+                Terjadi kesalahan saat mengirim komentar.
+            </div>
+        </div>
+    </div>
+
+    {% csrf_token %}
+    {% for field in form %}
+        {% if not field.is_hidden and field.name not in 'honeypot,content_type,object_pk,timestamp,security_hash' %}
+        <div {% if field.name == 'comment' %}class="sm:col-span-2"{% endif %}>
+            <label for="{{ field.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900">{{ field.label }}</label>
+            {% if field.name == 'comment' %}
+                <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="6" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500" placeholder="Tulis komentar Anda..." required>{{ field.value|default:'' }}</textarea>
+            {% else %}
+                <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500" placeholder="{% if field.name == 'name' %}Masukkan nama lengkap Anda{% else %}email@example.com{% endif %}" required value="{{ field.value|default:'' }}">
+            {% endif %}
+        </div>
+        {% else %}
+        <div>{{ field }}</div>
+        {% endif %}
+    {% endfor %}
+    <button type="submit" name="post" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300">
+        Kirim Komentar
+    </button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('comment-form');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Reset form
+            this.reset();
+            
+            // Show success alert
+            const successAlert = document.getElementById('success-alert');
+            successAlert.classList.remove('hidden');
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                successAlert.classList.add('hidden');
+                location.reload();
+            }, 3000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Show error alert
+            const errorAlert = document.getElementById('error-alert');
+            errorAlert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                errorAlert.classList.add('hidden');
+            }, 3000);
+        });
+    });
+});
+</script>

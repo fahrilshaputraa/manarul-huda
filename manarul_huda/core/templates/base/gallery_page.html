@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load gallery_tag %}
+
+{% block content %}
+<div class="p-6">
+    <div class="bg-primary-50 max-w-screen-xl mx-auto p-6 rounded-lg">
+        <h2 class="text-primary-950 text-4xl font-semibold">{{ page.title }}</h2>
+        <p class="text-primary-950 text-lg mb-8">{{ page.introduction }}</p>
+        {% gallery_tag page.collection %}
+    </div>
+</div>
+{% endblock %}

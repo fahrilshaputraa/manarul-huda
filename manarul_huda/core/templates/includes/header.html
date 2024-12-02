@@ -1,23 +1,23 @@
-{% load wagtailcore_tags navigation_tags static i18n %}
+{% load wagtailcore_tags navigation_tags wagtailimages_tags static i18n %}
 <header>
     <nav class="bg-primary-300 border-gray-200">
       <div class="flex flex-wrap gap-3 md:gap-5 items-start p-2 md:p-3 max-w-screen-2xl mx-auto text-xs md:text-sm text-primary-950">
         <address class="flex gap-2 md:gap-2.5 items-center self-stretch not-italic">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
-            <p class="self-stretch my-auto">
-                Jl.Muktisari, Kec. Cipaku, Kabupaten Ciamis, Jawa Barat
-            </p>
+            <a href="{{ settings.base.WebsiteSettings.location_link }}" target="_blank" class="self-stretch my-auto hover:underline focus:outline-none">
+                {{ settings.base.WebsiteSettings.location }}
+            </a>
         </address>
         <address class="flex gap-2 md:gap-2.5 items-center whitespace-nowrap not-italic">
              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-            <a href="tel:+7231290927390" class="self-stretch my-auto hover:underline focus:outline-none focus:ring-2 focus:ring-lime-950">
-                +7231290927390
+            <a href="tel:+{{ settings.base.WebsiteSettings.phone }}" target="_blank" class="self-stretch my-auto hover:underline focus:outline-none">
+                {{ settings.base.WebsiteSettings.phone }}
             </a>
         </address>
         <address class="flex gap-2 md:gap-2.5 items-center whitespace-nowrap not-italic">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
-            <a href="mailto:+7231290927390" class="self-stretch my-auto hover:underline focus:outline-none focus:ring-2 focus:ring-lime-950">
-                ymhu@ymhu.or.id
+            <a href="mailto:{{ settings.base.WebsiteSettings.email }}" target="_blank" class="self-stretch my-auto hover:underline focus:outline-none">
+                {{ settings.base.WebsiteSettings.email }}
             </a>
         </address>
     </div>
@@ -25,10 +25,11 @@
       <nav class="bg-primary-50 border-gray-200 px-4 lg:px-6 py-2.5 lg:h-32 sticky top-0 z-50">
           <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-2xl h-full">
               <a href="/" class="flex items-center">
-                  <img src="{% static 'dist/img/logo.png' %}" class="mr-3 h-14 sm:h-16 md:h-20 lg:h-24" alt="Manarul Huda Buniseuri Logo" />
+                {% image settings.base.WebsiteSettings.logo original as logo %}
+                  <img src="{{ logo.url }}" class="mr-3 h-14 sm:h-16 md:h-20 lg:h-24" alt="{{ logo.title }}" />
                   <div class="agency-logo max-sm:hidden">
-                      <h3 class="self-center text-sm md:text-2xl lg:text-2xl xl:text-3xl text-primary-950 font-semibold whitespace-nowrap uppercase">Yayasan Manarul Huda</h3>
-                      <h4 class="self-center text-sm md:text-lg lg:text-xl text-primary-700 font-semibold whitespace-nowrap uppercase">Buniseuri</h4>
+                      <h3 class="self-center text-sm md:text-2xl lg:text-2xl xl:text-3xl text-primary-950 font-semibold whitespace-nowrap uppercase">{{ settings.base.WebsiteSettings.name }}</h3>
+                      <h4 class="self-center text-sm md:text-lg lg:text-xl text-primary-700 font-semibold whitespace-nowrap uppercase">{{ settings.base.WebsiteSettings.sub_name }}</h4>
                   </div>
               </a>
               <button data-collapse-toggle="navbar-multi-level" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg lg:hidden focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-multi-level" aria-expanded="false">
