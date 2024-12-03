@@ -1,0 +1,72 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}{% trans "Comments" %}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Comments") icon="comment" %}
+
+    <div class="nice-padding">
+        {% if comments %}
+            <table class="listing">
+                <thead>
+                    <tr>
+                        <th>{% trans "Author" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th>{% trans "Comment" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comment in comments %}
+                        <tr>
+                            <td>{{ comment.user_name }}</td>
+                            <td>{{ comment.user_email }}</td>
+                            <td>
+                                {{ comment.comment|truncatewords:10 }}
+                            </td>
+                            <td>{{ comment.submit_date }}</td>
+                            <td>
+                                {% if comment.is_removed %}
+                                    <span class="status-tag">{% trans "Removed" %}</span>
+                                {% elif comment.is_public %}
+                                    <span class="status-tag primary">{% trans "Public" %}</span>
+                                {% else %}
+                                    <span class="status-tag warning">{% trans "Private" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'comments:delete' comment.id %}?next={{ request.path }}">
+                                    {% trans "Delete" %}
+                                </a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if comments.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    <p>{% blocktrans with page_num=comments.number total_pages=comments.paginator.num_pages %}Page {{ page_num }} of {{ total_pages }}.{% endblocktrans %}</p>
+                    <ul>
+                        {% if comments.has_previous %}
+                            <li class="prev">
+                                <a href="?page={{ comments.previous_page_number }}" class="icon icon-arrow-left">{% trans "Previous" %}</a>
+                            </li>
+                        {% endif %}
+                        {% if comments.has_next %}
+                            <li class="next">
+                                <a href="?page={{ comments.next_page_number }}" class="icon icon-arrow-right">{% trans "Next" %}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% else %}
+            <p>{% trans "No comments yet." %}</p>
+        {% endif %}
+    </div>
+{% endblock %} 

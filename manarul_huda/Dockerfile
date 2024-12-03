@@ -5,23 +5,25 @@ FROM python:3.8-slim
 RUN useradd wagtail
 
 # Port used by this container to serve HTTP.
-EXPOSE 8000
+EXPOSE 89001
 
 # Set environment variables.
 # 1. Force Python stdout and stderr streams to be unbuffered.
 # 2. Set PORT variable that is used by Gunicorn. This should match "EXPOSE"
 #    command.
 ENV PYTHONUNBUFFERED=1 \
-    PORT=8000
+    PORT=89001 \
+    DJANGO_SETTINGS_MODULE=core.settings.production
 
 # Install system packages required by Wagtail and Django.
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
     build-essential \
     libpq-dev \
-    libmariadbclient-dev \
+    libmariadb-dev \
     libjpeg62-turbo-dev \
     zlib1g-dev \
     libwebp-dev \
+    gettext \
  && rm -rf /var/lib/apt/lists/*
 
 # Install the application server.
@@ -58,4 +60,6 @@ RUN python manage.py compilemessages
 #   PRACTICE. The database should be migrated manually or using the release
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; python manage.py migrate --noinput; gunicorn core.wsgi:application
+CMD set -xe; \
+    python manage.py migrate --noinput; \
+    gunicorn core.wsgi:application --bind 0.0.0.0:8901

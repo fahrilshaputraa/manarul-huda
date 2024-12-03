@@ -1,8 +1,21 @@
+import os
 from .base import *
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG', '0') == '1'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-try:
-    from .local import *
-except ImportError:
-    pass
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+
+# Database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': 5432,
+    }
+}
+
+# Update requirements.txt untuk menambahkan psycopg2

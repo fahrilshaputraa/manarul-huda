@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8901:8901"
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume: 
