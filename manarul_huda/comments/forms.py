@@ -9,6 +9,12 @@ class CustomCommentForm(CommentDetailsForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields.pop("url")
+        
+    def _get_client_ip(self):
+        if self.request:
+            ip_address = self.request.META.get('REMOTE_ADDR', '')
+            return ip_address
+        return ''
 
     def get_comment_create_data(self, site_id=None):
         return dict (

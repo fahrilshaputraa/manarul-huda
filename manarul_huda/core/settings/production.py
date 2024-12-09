@@ -18,4 +18,4 @@ DATABASES = {
     }
 }
 
-# Update requirements.txt untuk menambahkan psycopg2
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')

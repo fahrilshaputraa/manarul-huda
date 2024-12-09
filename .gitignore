@@ -2,8 +2,14 @@ venv
 *.pyc
 *.db
 *.sqlite3
+*.log
+*.sql
+manarul_huda/.env
+.env
+
 
 node_modules
 __pycache__
 
 media/
+media_backup/

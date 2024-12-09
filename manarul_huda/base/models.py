@@ -97,7 +97,6 @@ class FooterText(BaseGenericSetting):
     panels = [
         FieldPanel("menu_items"), 
         FieldPanel("social_media"),
-        PublishingPanel(),
     ]
 
     def __str__(self):
@@ -167,6 +166,8 @@ class MenuItem(models.Model):
         ordering = ['name_item']
 
 class Gallery(MetadataPageMixin, Page):
+    parent_page_types = ['home.HomePage']
+    subpage_types = []
     template = "base/gallery_page.html"
     introduction = models.TextField(help_text="Text to describe the page", blank=True)
     collection = models.ForeignKey(

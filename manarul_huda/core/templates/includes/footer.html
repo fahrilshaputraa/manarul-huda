@@ -5,11 +5,17 @@
         <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0 w-full">
                 <a href="#" class="flex items-center md:block lg:flex">
-                    {% image settings.base.WebsiteSettings.logo original as logo %}
-                    <img src="{{ logo.url }}" class="mr-3 w-20 md:w-24 lg:w-32" alt="{{ logo.title }}" />
+                    {% if settings.base.WebsiteSettings.logo %}
+                        {% image settings.base.WebsiteSettings.logo original as logo %}
+                        <img src="{{ logo.url }}" class="mr-3 w-20 md:w-24 lg:w-32" alt="{{ logo.title }}" />
+                    {% endif %}
                     <div class="footer-title ">
-                        <h3 class="self-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold whitespace-normal text-white uppercase">{{ settings.base.WebsiteSettings.name }}</h3>
-                        <span class="text-primary-950 font-semibold text-base sm:text-lg md:text-xl lg:text-2xl uppercase block">{{ settings.base.WebsiteSettings.sub_name }}</span>
+                        {% if settings.base.WebsiteSettings.name %}
+                            <h3 class="self-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold whitespace-normal text-white uppercase">{{ settings.base.WebsiteSettings.name }}</h3>
+                        {% endif %}
+                        {% if settings.base.WebsiteSettings.sub_name %}
+                            <span class="text-primary-950 font-semibold text-base sm:text-lg md:text-xl lg:text-2xl uppercase block">{{ settings.base.WebsiteSettings.sub_name }}</span>
+                        {% endif %}
                     </div>
                 </a>
             </div>

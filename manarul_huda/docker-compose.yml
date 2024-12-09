@@ -1,12 +1,13 @@
+version: '3'
+
 services:
   web:
     build: .
     ports:
-      - "8901:8901"
+      - "8070:8020"
     volumes:
-      - .:/app
-      - static_volume:/app/static
-      - media_volume:/app/media
+      # - ./staticfiles:/opt/app/web_apps/core/static
+      - media_data:/opt/app/web_apps/media
     env_file:
       - .env
     depends_on:
@@ -15,6 +16,8 @@ services:
 
   db:
     image: postgres:13
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
@@ -23,5 +26,4 @@ services:
 
 volumes:
   postgres_data:
-  static_volume:
-  media_volume: 
+  media_data:

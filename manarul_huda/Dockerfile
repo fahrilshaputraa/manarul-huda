@@ -1,65 +1,47 @@
-# Use an official Python runtime based on Debian 10 "buster" as a parent image.
 FROM python:3.8-slim
 
-# Add user that will be used in the container.
-RUN useradd wagtail
+# Clean up unnecessary files before installing packages
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Port used by this container to serve HTTP.
-EXPOSE 89001
+# Install system packages
+RUN apt-get update --yes \
+    && apt-get install --yes --no-install-recommends \
+        nginx supervisor vim build-essential libpq-dev gettext \
+        libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0 \
+        libjpeg-dev libopenjp2-7-dev libffi-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Set environment variables.
-# 1. Force Python stdout and stderr streams to be unbuffered.
-# 2. Set PORT variable that is used by Gunicorn. This should match "EXPOSE"
-#    command.
-ENV PYTHONUNBUFFERED=1 \
-    PORT=89001 \
-    DJANGO_SETTINGS_MODULE=core.settings.production
+# Copy Nginx config
+COPY nginx-config/nginx.default /etc/nginx/sites-available/default
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# Install system packages required by Wagtail and Django.
-RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    libmariadb-dev \
-    libjpeg62-turbo-dev \
-    zlib1g-dev \
-    libwebp-dev \
-    gettext \
- && rm -rf /var/lib/apt/lists/*
+# Install Python dependencies
+COPY requirements.txt /opt/app/requirements.txt
+RUN pip install -r /opt/app/requirements.txt
 
-# Install the application server.
-RUN pip install "gunicorn==20.0.4"
+# Install Granian globally
+RUN pip install granian
 
-# Install the project requirements.
-COPY requirements.txt /
-RUN pip install -r /requirements.txt
+# Setup project directory
+RUN mkdir -p /opt/app/web_apps
+COPY . /opt/app/web_apps
+WORKDIR /opt/app/web_apps
 
-# Use /app folder as a directory where the source code is stored.
-WORKDIR /app
+# Copy supervisor config
+COPY supervisor-config/task-granian.conf /etc/supervisor/conf.d/task-granian.conf
 
-# Set this directory to be owned by the "wagtail" user. This Wagtail project
-# uses SQLite, the folder needs to be owned by the user that
-# will be writing to the database file.
-RUN chown wagtail:wagtail /app
+# Create granian log directory
+RUN mkdir -p /var/log/granian && chown -R root:root /var/log/granian
 
-# Copy the source code of the project into the container.
-COPY --chown=wagtail:wagtail . .
+# Copy and make the start script executable
+COPY docker-entry-point/start-server.sh /opt/app/start-server.sh
+RUN chmod +x /opt/app/start-server.sh
 
-# Use user "wagtail" to run the build commands below and the server itself.
-USER wagtail
+# Expose the port
+EXPOSE 8020
 
-# Collect static files.
-RUN python manage.py collectstatic --noinput --clear
-RUN python manage.py compilemessages
-
-# Runtime command that executes when "docker run" is called, it does the
-# following:
-#   1. Migrate the database.
-#   2. Start the application server.
-# WARNING:
-#   Migrating database at the same time as starting the server IS NOT THE BEST
-#   PRACTICE. The database should be migrated manually or using the release
-#   phase facilities of your hosting platform. This is used only so the
-#   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; \
-    python manage.py migrate --noinput; \
-    gunicorn core.wsgi:application --bind 0.0.0.0:8901
+# Run supervisord
+ENTRYPOINT ["/opt/app/start-server.sh"]
+CMD ["supervisord", "-n"]
