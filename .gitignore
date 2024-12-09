@@ -6,6 +6,7 @@ venv
 *.sql
 manarul_huda/.env
 .env
+.env copy.example
 
 
 node_modules
