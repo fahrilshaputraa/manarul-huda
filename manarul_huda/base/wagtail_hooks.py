@@ -10,6 +10,13 @@ def global_admin_css():
         static('dist/css/custom_admin.css')
     )
 
+@hooks.register('insert_global_admin_js')
+def global_admin_js():
+    return format_html(
+        '<script src="{}"></script>',
+        static('dist/js/custom_admin.js')
+    )
+
 # @hooks.register('construct_main_menu')
 # def hide_snippets_menu_item(request, menu_items):
 #     menu_items[:] = [item for item in menu_items if item.name != 'snippets']

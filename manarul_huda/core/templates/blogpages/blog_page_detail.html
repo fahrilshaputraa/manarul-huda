@@ -2,73 +2,215 @@
 {% load wagtailcore_tags wagtailimages_tags comments %}
 
 {% block content %}
-<div class="p-6">
-    <!-- Konten Utama -->
-    <div class="max-w-screen-xl mx-auto grid lg:grid-cols-3 gap-8 min-h-screen ">
-        <!-- Artikel Utama -->
-        <div class="lg:col-span-2 p-6">
-            <h1 class="text-primary-950 text-5xl font-bold mb-2">{{ page.title }}</h1>
-            <div class="border-y py-4 px-2 my-6 flex justify-between items-center text-gray-500">
-                <div>
-                    <p class="text-sm"><a href="" class="text-primary-500 capitalize">{{ page.owner }}</a> - {{ page.created_at|date:"d F Y" }}</p>
+<main class="min-h-screen">
+    <div class="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <!-- Konten Utama -->
+        <div class="max-w-screen-xl mx-auto grid lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Artikel Utama -->
+            <article class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 sm:p-6 lg:p-8">
+                    <!-- Header -->
+                    <header class="mb-6">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-950 tracking-tight mb-4 break-words hyphens-auto">
+                            {{ page.title }}
+                        </h1>
+                        <div class="border-y py-3 sm:py-4 px-2 flex flex-wrap sm:flex-nowrap justify-between items-center gap-4 text-gray-500">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <a href="" class="text-primary-500 capitalize hover:text-primary-600 transition-colors break-words">
+                                    {{ page.owner }}
+                                </a>
+                                <span>-</span>
+                                <time datetime="{{ page.created_at|date:'Y-m-d' }}" class="text-sm">
+                                    {{ page.created_at|date:"d F Y" }}
+                                </time>
+                            </div>
+                            <div class="flex items-center gap-4 sm:gap-6 text-sm">
+                                <a href="#comment-section" 
+                                   class="comments flex items-center gap-2 hover:text-primary-500 transition-colors"
+                                   title="Lihat komentar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" viewBox="0 0 24 24">
+                                        <path fill="currentColor" fill-rule="evenodd" d="M2.5 12.096a9.5 9.5 0 1 1 9.5 9.5H3.25a.75.75 0 0 1-.53-1.28l2.053-2.054A9.47 9.47 0 0 1 2.5 12.096m9.5-8a8 8 0 0 0-5.657 13.657a.75.75 0 0 1 0 1.06l-1.282 1.283H12a8 8 0 1 0 0-16" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>{{ comment_list.count }}</span>
+                                </a>
+                                <button type="button" 
+                                        class="share flex items-center gap-2 hover:text-primary-500 transition-colors group" 
+                                        onclick="copyCurrentURL(this)"
+                                        title="Salin link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" viewBox="0 0 24 24">
+                                        <path fill="currentColor" fill-rule="evenodd" d="M12.588 5.02a4.525 4.525 0 0 1 6.399 6.399l-.01.01l-2.264 2.264a4.525 4.525 0 0 1-6.824-.489a.75.75 0 1 1 1.201-.898a3.026 3.026 0 0 0 4.562.327l2.26-2.26a3.026 3.026 0 0 0-4.278-4.277L12.34 7.383a.75.75 0 1 1-1.058-1.064zM8.905 9.266a4.525 4.525 0 0 1 5.205 1.53a.75.75 0 0 1-1.201.898a3.024 3.024 0 0 0-4.562-.327l-2.26 2.26a3.025 3.025 0 0 0 4.277 4.278l1.286-1.286a.75.75 0 0 1 1.061 1.06l-1.3 1.3a4.525 4.525 0 0 1-6.399-6.398l.01-.01l2.264-2.264a4.5 4.5 0 0 1 1.62-1.04" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="group-hover:underline copy-text">Salin Link</span>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Featured Image -->
+                    <figure class="relative overflow-hidden rounded-xl mb-8 aspect-[16/9]">
+                        {% image page.blog_image fill-1200x630 as blog_img %}
+                        <img src="{{ blog_img.url }}" 
+                             alt="{{ blog_img.title }}" 
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                    </figure>
+
+                    <!-- Content -->
+                    <div class="prose prose-base sm:prose-lg max-w-none prose-headings:text-primary-950 prose-p:text-primary-950 prose-a:text-primary-500 hover:prose-a:text-primary-600 prose-strong:text-primary-950 prose-ul:text-primary-950 prose-ol:text-primary-950 prose-p:break-words prose-headings:break-words">
+                        {{ page.body|richtext }}
+                    </div>
+
+                    <!-- Comments Section -->
+                    <hr class="my-8 sm:my-10">
+                    <section id="comment-section" class="scroll-mt-16">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 break-words">
+                            Tinggalkan pesan ({{ comment_list.count }})
+                        </h2>
+                        {% render_comment_form for page %}
+                        {% render_comment_list for page %}
+                    </section>
                 </div>
-                <div class="flex gap-8 items-center text-sm">
-                    <a href="#comment-section" class="comments flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
-                            <path fill="currentColor" fill-rule="evenodd" d="M2.5 12.096a9.5 9.5 0 1 1 9.5 9.5H3.25a.75.75 0 0 1-.53-1.28l2.053-2.054A9.47 9.47 0 0 1 2.5 12.096m9.5-8a8 8 0 0 0-5.657 13.657a.75.75 0 0 1 0 1.06l-1.282 1.283H12a8 8 0 1 0 0-16" clip-rule="evenodd" />
-                        </svg>
-                        <span>{{ comment_list.count }}</span>
-                    </a>
-                    <div class="share flex items-center gap-1 cursor-pointer" onclick="copyCurrentURL()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
-                            <path fill="currentColor" fill-rule="evenodd" d="M12.588 5.02a4.525 4.525 0 0 1 6.399 6.399l-.01.01l-2.264 2.264a4.525 4.525 0 0 1-6.824-.489a.75.75 0 1 1 1.201-.898a3.026 3.026 0 0 0 4.562.327l2.26-2.26a3.026 3.026 0 0 0-4.278-4.277L12.34 7.383a.75.75 0 1 1-1.058-1.064zM8.905 9.266a4.525 4.525 0 0 1 5.205 1.53a.75.75 0 0 1-1.201.898a3.024 3.024 0 0 0-4.562-.327l-2.26 2.26a3.025 3.025 0 0 0 4.277 4.278l1.286-1.286a.75.75 0 0 1 1.061 1.06l-1.3 1.3a4.525 4.525 0 0 1-6.399-6.398l.01-.01l2.264-2.264a4.5 4.5 0 0 1 1.62-1.04" clip-rule="evenodd" />
-                        </svg>
-                        <span>Copy Link</span>
+            </article>
+
+            <!-- Sidebar Info Lainnya -->
+            <aside class="lg:sticky lg:top-6 h-fit">
+                <div class="bg-primary-50 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 sm:p-6">
+                        <h2 class="text-xl sm:text-2xl font-semibold text-primary-950 mb-4 break-words">Info Lainnya</h2>
+                        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                            {% for blog in other_blogs|slice:":4" %}
+                            <a href="{{ blog.url }}" class="group flex gap-3 sm:gap-4 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                                {% image blog.blog_image fill-96x96 as blog_image %}
+                                <img src="{{ blog_image.url }}" 
+                                     alt="{{ blog_image.title }}" 
+                                     class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg flex-shrink-0"
+                                     loading="lazy">
+                                <div class="flex-1 min-w-0 overflow-hidden">
+                                    <h3 class="font-semibold text-primary-950 text-base sm:text-lg mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors break-words">
+                                        {{ blog.title }}
+                                    </h3>
+                                    <time datetime="{{ blog.created_at|date:'Y-m-d' }}" class="text-sm text-primary-500 block">
+                                        {{ blog.created_at|date:"d F Y" }}
+                                    </time>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="overflow-hidden rounded-lg mb-6">
-                {% image page.blog_image fill-1200x630 %}
-            </div>
-            <div class="description text-lg text-primary-950 prose prose-lg max-w-none prose-headings:text-primary-950 prose-p:text-primary-950 prose-a:text-primary-500 hover:prose-a:text-primary-600 prose-strong:text-primary-950 prose-ul:text-primary-950 prose-ol:text-primary-950">
-              {{ page.body|richtext }}
-            </div>
-            
-            <hr class="my-6">
-            <section class="not-format" id="comment-section">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg lg:text-2xl font-bold text-gray-900">Tinggalkan pesan ({{ comment_list.count }})</h2>
-                </div>
-                {% render_comment_form for page %}
-                {% render_comment_list for page %}
-            </section>
-        </div>
-
-        <!-- Sidebar Info Lainnya -->
-        <div class="bg-primary-50 p-6 shadow-md rounded-md h-fit">
-            <h2 class="text-primary-950 text-2xl font-semibold mb-4">Info Lainnya</h2>
-            <div class="space-y-4">
-                {% for blog in other_blogs|slice:":4" %}
-                <!-- Item Info -->
-                <a href="{{ blog.url }}" class="flex gap-4">
-                    {% image blog.blog_image fill-96x96 as blog_image %}
-                    <img src="{{ blog_image.url }}" alt="{{ blog_image.title }}" class="w-24 h-24 object-cover rounded-lg">
-                    <div>
-                        <h3 class="text-primary-950 font-semibold text-lg">{{ blog.title }}</h3>
-                        <p class="text-primary-500 text-sm">{{ blog.created_at|date:"d F Y" }}</p>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
+            </aside>
         </div>
     </div>
+</main>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 transform opacity-0 invisible transition-all duration-300 z-50">
+    <div class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm shadow-lg">
+        <span class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7Z"/>
+            </svg>
+            Link berhasil disalin!
+        </span>
+    </div>
 </div>
- <script>
-    function copyCurrentURL() {
-        navigator.clipboard.writeText(window.location.href)
-            .then(() => alert('Link berhasil disalin!'))
-            .catch(err => console.error('Gagal menyalin link:', err));
+
+<script>
+let copyTimeout;
+
+async function copyCurrentURL(button) {
+    const toast = document.getElementById('toast');
+    const copyText = button.querySelector('.copy-text');
+    const originalText = copyText.textContent;
+    const url = window.location.href;
+    
+    try {
+        // Create fallback textarea
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        
+        // Try modern clipboard API first
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            try {
+                await navigator.clipboard.writeText(url);
+                textArea.remove(); // Clean up
+            } catch (clipboardErr) {
+                console.warn('Clipboard API failed, falling back to execCommand', clipboardErr);
+                // Fall through to execCommand
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+            }
+        } else {
+            // Fallback for browsers without clipboard API
+            textArea.focus();
+            textArea.select();
+            document.execCommand('copy');
         }
+        
+        // Clean up
+        textArea.remove();
+        
+        // Update UI for success
+        copyText.textContent = 'Tersalin!';
+        button.classList.add('text-primary-500');
+        
+        // Show success toast
+        toast.classList.remove('invisible', 'opacity-0');
+        toast.classList.add('opacity-100');
+        
+        // Clear existing timeout
+        if (copyTimeout) {
+            clearTimeout(copyTimeout);
+        }
+        
+        // Reset everything after 2 seconds
+        copyTimeout = setTimeout(() => {
+            // Hide toast
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+            
+            // Reset button text and style
+            copyText.textContent = originalText;
+            button.classList.remove('text-primary-500');
+            
+            // Hide toast completely after animation
+            setTimeout(() => {
+                toast.classList.add('invisible');
+            }, 300);
+        }, 2000);
+    } catch (err) {
+        console.error('Gagal menyalin link:', err);
+        copyText.textContent = 'Gagal menyalin';
+        button.classList.add('text-red-500');
+        
+        // Show error toast
+        const toastContent = toast.querySelector('span');
+        const toastIcon = toast.querySelector('svg');
+        if (toastIcon) toastIcon.style.display = 'none';
+        if (toastContent) toastContent.textContent = 'Gagal menyalin link';
+        
+        toast.classList.remove('invisible', 'opacity-0');
+        toast.classList.add('opacity-100');
+        
+        // Reset text and style after 2 seconds
+        setTimeout(() => {
+            copyText.textContent = originalText;
+            button.classList.remove('text-red-500');
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('invisible');
+                if (toastIcon) toastIcon.style.display = '';
+                if (toastContent) toastContent.textContent = 'Link berhasil disalin!';
+            }, 300);
+        }, 2000);
+    }
+}
 </script>
 {% endblock %}

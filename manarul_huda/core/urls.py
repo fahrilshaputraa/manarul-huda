@@ -22,7 +22,7 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}),
     # Override default django_comments URLs with our custom views
-    path("comments/post/", comment_views.post_comment, name="comments-post-comment"),
+    path("comments/post/<int:object_id>/", comment_views.post_comment, name="comments-post-comment"),
     path("comments/", include("django_comments.urls")),
 ]
 

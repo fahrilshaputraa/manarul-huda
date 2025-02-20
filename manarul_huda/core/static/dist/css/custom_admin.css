@@ -12,3 +12,41 @@
     --w-color-surface-button-hover: #3D551F;
     --w-color-surface-page: #F6FAEB;
 }
+
+/* Style untuk badge warning */
+.comments-menu-item[data-badge] {
+    position: relative;
+}
+
+.comments-menu-item[data-badge]::after {
+    content: attr(data-badge);
+    background-color: #ff5c38;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Style untuk baris komentar yang belum diapprove */
+.listing tbody tr[style*="background-color: #1d1d1d"] {
+    background-color: rgba(255, 92, 56, 0.1) !important;
+}
+
+/* Style untuk tombol approve */
+.listing tbody tr a[href*="approve"] {
+    color: #608B25;
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.listing tbody tr a[href*="approve"]:hover {
+    color: #4A6B20;
+    text-decoration: underline;
+}

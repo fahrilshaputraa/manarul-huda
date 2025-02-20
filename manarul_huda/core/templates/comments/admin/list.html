@@ -16,12 +16,12 @@
                         <th>{% trans "Comment" %}</th>
                         <th>{% trans "Date" %}</th>
                         <th>{% trans "Status" %}</th>
-                        <th>{% trans "Action" %}</th>
+                        <th>{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for comment in comments %}
-                        <tr>
+                        <tr {% if not comment.is_public %}style="background-color: #1d1d1d;"{% endif %}>
                             <td>{{ comment.user_name }}</td>
                             <td>{{ comment.user_email }}</td>
                             <td>
@@ -41,7 +41,11 @@
                                 <a href="{% url 'comments:delete' comment.id %}?next={{ request.path }}">
                                     {% trans "Delete" %}
                                 </a>
-
+                                {% if not comment.is_public %}
+                                <a href="{% url 'comments:approve' comment.id %}?next={{ request.path }}">
+                                    {% trans "Approve" %}
+                                </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

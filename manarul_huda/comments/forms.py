@@ -25,7 +25,7 @@ class CustomCommentForm(CommentDetailsForm):
             comment = self.cleaned_data["comment"],
             submit_date = timezone.now(),
             site_id = site_id or getattr(settings, "SITE_ID", None),
-            is_public = True,
+            is_public = False,
             is_removed = False,
         )
     

@@ -222,6 +222,9 @@ ADMINS = [
 # Comment settings
 COMMENTS_APP = 'comments'
 
+# Disable Wagtail version check
+WAGTAIL_ENABLE_UPDATE_CHECK = False
+
 import os
 
 LOGGING = {

@@ -1,15 +1,30 @@
 {% load static %}
-{% for comment in comment_list %}
-<article class="p-6 text-base bg-white border-t border-gray-200">
-    <footer class="flex justify-between items-center mb-2">
-        <div class="flex items-center">
-            <p class="inline-flex items-center mr-3 font-semibold text-sm text-gray-900"><img
-                    class="mr-2 w-6 h-6 rounded-full"
-                    src="{% static 'dist/img/guest.svg' %}"
-                    alt="{{ comment.name }}">{{ comment.name }}</p>
-            <p class="text-sm text-gray-600"><time pubdate datetime="{{ comment.submit_date|date:"c" }}" title="{{ comment.submit_date|date:"DATE_FORMAT" }}">{{ comment.submit_date|date:"d M Y" }}</time></p>
-        </div>
-    </footer>
-    <p>{{ comment.comment }}</p>
-</article>
-{% endfor %}
+<div class="space-y-4 mt-8">
+    {% for comment in comment_list %}
+    <article class="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <footer class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-4">
+            <div class="flex items-center flex-wrap gap-2">
+                <p class="inline-flex items-center mr-0 sm:mr-3 font-semibold text-sm text-gray-900">
+                    <img class="mr-2 w-6 h-6 rounded-full flex-shrink-0" src="{% static 'dist/img/guest.svg' %}" alt="{{ comment.name }}">
+                    <span class="break-words">{{ comment.name }}</span>
+                </p>
+                <p class="text-sm text-gray-600">
+                    <time pubdate datetime="{{ comment.submit_date|date:"c" }}" title="{{ comment.submit_date|date:"DATE_FORMAT" }}">
+                        {{ comment.submit_date|date:"d M Y" }}
+                    </time>
+                </p>
+            </div>
+            {% if not comment.is_public %}
+            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded whitespace-nowrap">
+                Menunggu Persetujuan
+            </span>
+            {% endif %}
+        </footer>
+        <p class="text-gray-700 text-sm sm:text-base whitespace-pre-line break-words">{{ comment.comment }}</p>
+    </article>
+    {% empty %}
+    <div class="p-4 sm:p-6 text-center bg-gray-50 border border-gray-200 rounded-lg">
+        <p class="text-gray-600 text-sm sm:text-base">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+    </div>
+    {% endfor %}
+</div>
